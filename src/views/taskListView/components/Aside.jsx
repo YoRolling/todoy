@@ -13,12 +13,7 @@ import LoadingButton from '@atlaskit/button/loading-button'
 import Button from '@atlaskit/button'
 import TextField from '@atlaskit/textfield'
 import Modal, { ModalTransition } from '@atlaskit/modal-dialog'
-import Form, {
-  ErrorMessage,
-  Field,
-  FormFooter,
-  HelperMessage,
-} from '@atlaskit/form'
+import Form, { ErrorMessage, Field, FormFooter } from '@atlaskit/form'
 
 import { CustomLink } from 'components/CustomLink/CustomLink'
 import { Icon } from 'components/Icon/Icon'
@@ -32,7 +27,7 @@ export default function AsideBarView() {
   const close = () => setIsOpen(false)
   const open = () => setIsOpen(true)
 
-  const [name, setName] = useState('')
+  // const [name, setName] = useState('')
 
   return (
     <>
