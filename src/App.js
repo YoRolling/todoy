@@ -24,14 +24,19 @@ function App() {
   return (
     <Router>
       <AppFrame>
-        <SideFrame></SideFrame>
+        <Route path={['/task', '/settings']}>
+          <SideFrame></SideFrame>
+        </Route>
         <ContentFrame flex>
           <Switch>
-            <Route exact path="/">
-              <Redirect to="/task" />
-            </Route>
             <Route path="/task">
               <TaskListView />
+            </Route>
+            <Route path="/settings">
+              <div>Settings</div>
+            </Route>
+            <Route>
+              <Redirect to="/task" />
             </Route>
           </Switch>
         </ContentFrame>

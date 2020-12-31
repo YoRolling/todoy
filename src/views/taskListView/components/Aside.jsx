@@ -1,4 +1,4 @@
-import { useState, Fragment } from 'react'
+import { useState, Fragment, useEffect } from 'react'
 import styled from 'styled-components'
 import {
   MenuGroup,
@@ -7,7 +7,7 @@ import {
   HeadingItem,
   ButtonItem,
 } from '@atlaskit/menu'
-import { useRouteMatch } from 'react-router-dom'
+import { useParams, useRouteMatch, useHistory } from 'react-router-dom'
 import ButtonGroup from '@atlaskit/button/button-group'
 import LoadingButton from '@atlaskit/button/loading-button'
 import Button from '@atlaskit/button'
@@ -17,17 +17,46 @@ import Form, { ErrorMessage, Field, FormFooter } from '@atlaskit/form'
 
 import { CustomLink } from 'components/CustomLink/CustomLink'
 import { Icon } from 'components/Icon/Icon'
+import { CheckListService } from 'db/'
+
 const MenuListFrame = styled.aside.attrs({ className: 'aside' })`
   flex: 1 1 20%;
   padding: 10px 30px;
+  .active {
+    color: #172b4d;
+    background-color: #f4f5f7;
+    -webkit-text-decoration: none;
+    text-decoration: none;
+  }
 `
+const d = new Date()
 export default function AsideBarView() {
   const match = useRouteMatch({ path: '/task' })
+  const params = useParams()
+  const history = useHistory()
   const [isOpen, setIsOpen] = useState(false)
   const close = () => setIsOpen(false)
   const open = () => setIsOpen(true)
+  const [taskOrderList, setTaskOrderList] = useState([])
+  async function getAll() {
+    try {
+      const result = await CheckListService.getAll()
+      setTaskOrderList(result)
+    } catch (error) {
+      console.error(error)
+    }
+  }
 
-  // const [name, setName] = useState('')
+  useEffect(() => {
+    if (!params.id && taskOrderList.length > 0) {
+      const v = taskOrderList[0]
+      history.push(`${match.url}/${v.id}`)
+    }
+  }, [params, taskOrderList, match, history])
+
+  useEffect(() => {
+    getAll()
+  }, [])
 
   return (
     <>
@@ -35,7 +64,7 @@ export default function AsideBarView() {
         <MenuGroup>
           <HeadingItem>
             <h2>我的一天</h2>
-            <h6>12-28 星期一</h6>
+            <h6>{d.getMonth() + 1 + '-' + d.getDate()} 星期一</h6>
           </HeadingItem>
           <Section title="Starred">
             <ButtonItem iconBefore={<Icon name="add-line" />} onClick={open}>
@@ -43,13 +72,17 @@ export default function AsideBarView() {
             </ButtonItem>
           </Section>
           <Section hasSeparator title="Task">
-            <CustomItem
-              href={`${match.path}/editor`}
-              component={CustomLink}
-              iconBefore={<Icon name="task-line" />}
-            >
-              我的一天
-            </CustomItem>
+            {taskOrderList.map((v) => (
+              <CustomItem
+                href={`${match.url}/${v.id}`}
+                component={CustomLink}
+                iconBefore={<Icon name="task-line" />}
+                key={v.id}
+                active={parseInt(params.id, 10) === v.id}
+              >
+                {v.name}
+              </CustomItem>
+            ))}
           </Section>
         </MenuGroup>
       </MenuListFrame>
@@ -59,11 +92,13 @@ export default function AsideBarView() {
             <Form
               onSubmit={(data) => {
                 console.log('form data', data)
-                return new Promise((resolve) =>
-                  setTimeout(resolve, 2000)
-                ).then(() =>
-                  data.name === 'error' ? { name: '清单名称重复' } : undefined
-                )
+                return CheckListService.add(data)
+                  .then((res) => {
+                    console.log({ res })
+                    getAll()
+                    close()
+                  })
+                  .catch((error) => error)
               }}
             >
               {({ formProps, submitting }) => (
@@ -80,7 +115,6 @@ export default function AsideBarView() {
                           autoComplete="off"
                           {...fieldProps}
                           placeholder="清单名称"
-                          elemBeforeInput={<Icon name="medal-line" />}
                         />
                         {error && <ErrorMessage>{error}</ErrorMessage>}
                       </Fragment>

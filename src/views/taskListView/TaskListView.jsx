@@ -1,16 +1,10 @@
 import React from 'react'
-import {
-  BrowserRouter as Router,
-  Route,
-  useRouteMatch,
-  Switch,
-} from 'react-router-dom'
+import { Route, useRouteMatch, Switch } from 'react-router-dom'
 
 import styled from 'styled-components'
 
-import TaskView from './components/TaskView'
-import Editor from './components/Editor'
-import AsideBarView from './components/Aside'
+import TaskView from 'views/taskListView/components/TaskView'
+import AsideBarView from 'views/taskListView/components/Aside'
 const MainFrame = styled.article`
   display: flex;
   flex-direction: row;
@@ -22,23 +16,23 @@ const ContentFrame = styled.div.attrs({ className: 'content' })`
   padding: 10px 30px;
   border-left: 1px solid #f1f1f1;
 `
-export function TaskListView({ children }) {
+export function TaskListView() {
   const match = useRouteMatch()
   return (
     <MainFrame>
-      <Router>
+      <Route path={[`${match.path}/:id`, `${match.path}`]}>
         <AsideBarView />
-        <ContentFrame>
-          <Switch>
-            <Route path={`${match.path}/editor`} exact>
-              <Editor />
-            </Route>
-            <Route path={`${match.path}/*`}>
-              <TaskView />
-            </Route>
-          </Switch>
-        </ContentFrame>
-      </Router>
+      </Route>
+      <ContentFrame>
+        <Switch>
+          <Route path={`${match.path}/:id`}>
+            <TaskView />
+          </Route>
+          {/* <Route path={`${match.path}`}>
+              <Redirect to={`${match.path}/editor/1`} />
+            </Route> */}
+        </Switch>
+      </ContentFrame>
     </MainFrame>
   )
 }
