@@ -16,7 +16,7 @@ import Modal, { ModalTransition } from '@atlaskit/modal-dialog'
 import Form, { ErrorMessage, Field, FormFooter } from '@atlaskit/form'
 
 import { CustomLink } from 'components/CustomLink/CustomLink'
-import { Icon } from 'components/Icon/Icon'
+import Icon from 'components/Icon'
 import { CheckListService } from 'db/'
 
 const MenuListFrame = styled.aside.attrs({ className: 'aside' })`

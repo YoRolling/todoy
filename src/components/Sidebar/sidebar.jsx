@@ -9,7 +9,7 @@ import {
   CustomItem,
 } from '@atlaskit/side-navigation'
 import styled from 'styled-components'
-import { Icon } from 'components/Icon/'
+import Icon from 'components/Icon/'
 import { CustomLink } from 'components/CustomLink'
 import { useRouteMatch } from 'react-router'
 
@@ -52,7 +52,8 @@ export function Sidebar({ children, ...props }) {
         </NavigationContent>
         <NavigationFooter>
           <Footer>
-            <Icon name="heart-fill" color="red" /> Love & Peace
+            <Icon name="heart" iconStyle="fill" color="red" />
+            Love & Peace
           </Footer>
         </NavigationFooter>
       </SideNavigation>

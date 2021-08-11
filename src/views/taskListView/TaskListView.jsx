@@ -5,6 +5,7 @@ import styled from 'styled-components'
 
 import TaskView from 'views/taskListView/components/TaskView'
 import AsideBarView from 'views/taskListView/components/Aside'
+import Editor from './components/Editor'
 const MainFrame = styled.article`
   display: flex;
   flex-direction: row;
@@ -25,9 +26,13 @@ export function TaskListView() {
       </Route>
       <ContentFrame>
         <Switch>
-          <Route path={`${match.path}/:id`}>
+          <Route path={`${match.path}/:id`} exact>
             <TaskView />
           </Route>
+          {/* <Route path={`${match.path}/:id/editor`}>
+            <Editor />
+          </Route> */}
+
           {/* <Route path={`${match.path}`}>
               <Redirect to={`${match.path}/editor/1`} />
             </Route> */}

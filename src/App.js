@@ -1,5 +1,5 @@
 import React from 'react'
-import './App.css'
+import './App.less'
 import styled from 'styled-components'
 import {
   BrowserRouter as Router,
@@ -11,6 +11,7 @@ import { AppFrame } from './components/AppFrame/AppFrame'
 import { Sidebar } from './components/Sidebar/'
 import { Content } from './components/Content'
 import { TaskListView } from './views/taskListView'
+import TaskEditor from 'views/taskListView/components/Editor'
 
 const SideFrame = styled(Sidebar)`
   flex: 1 1 240px;
@@ -24,22 +25,30 @@ function App() {
   return (
     <Router>
       <AppFrame>
-        <Route path={['/task', '/settings']}>
-          <SideFrame></SideFrame>
-        </Route>
-        <ContentFrame flex>
-          <Switch>
-            <Route path="/task">
-              <TaskListView />
+        <Switch>
+          <Route path="/editor">
+            <TaskEditor />
+          </Route>
+          <Route>
+            <Route path={['/task', '/settings']}>
+              <SideFrame></SideFrame>
             </Route>
-            <Route path="/settings">
-              <div>Settings</div>
-            </Route>
-            <Route>
-              <Redirect to="/task" />
-            </Route>
-          </Switch>
-        </ContentFrame>
+            <ContentFrame flex>
+              <Switch>
+                <Route path="/task">
+                  <TaskListView />
+                </Route>
+                <Route path="/settings">
+                  <div>Settings</div>
+                </Route>
+
+                <Route>
+                  <Redirect to="/task" />
+                </Route>
+              </Switch>
+            </ContentFrame>
+          </Route>
+        </Switch>
       </AppFrame>
     </Router>
   )

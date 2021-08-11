@@ -1,11 +1,9 @@
-import React from 'react'
 import styled from 'styled-components'
-const IconFrame = styled.i`
-  color: ${(props) => props.color || 'black'};
+import InnerIcon from 'reamix'
+const StyledIcon = styled(InnerIcon)`
   vertical-align: bottom;
 `
-export function Icon({ name, size, ...rest }) {
-  return (
-    <IconFrame className={[`ri-${name}`, `ri-${size || 'fw'}`]} {...rest} />
-  )
+console.log(StyledIcon)
+export default function Icon(props) {
+  return <StyledIcon {...props} useStyle={{ verticalAlign: 'bottom' }} />
 }
