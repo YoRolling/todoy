@@ -13,21 +13,16 @@ export default function TaskView() {
     // history.push(`/editor`)
   }
   useEffect(() => {
-    async function getTaskByCheckId() {
-      try {
-        const result = await TaskService.getAllByCid(id)
-        setTaskList(result)
-      } catch (error) {}
-      console.log(111)
-    }
-    getTaskByCheckId(id)
+    TaskService.getAllByCid(id).then((result) => {
+      setTaskList(result)
+    })
   }, [id])
   return (
     <div>
       <header>
         <Button
-          variant="outlined"
-          iconLeft={<Icon name="add-line" />}
+          variant="outline"
+          leftIcon={<Icon name="ri-add-line" />}
           onClick={navigateToEditor}
         >
           创建
