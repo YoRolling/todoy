@@ -1,12 +1,15 @@
+import { AppShell } from '@mantine/core'
+import { Sidebar } from 'components/Sidebar'
 import React from 'react'
-import styled from 'styled-components'
-const Page = styled.div.attrs({ className: 'page' })`
-  width: 100vw;
-  height: 100vh;
-  display: flex;
-  flex-direction: row;
-`
+import { Outlet } from 'react-router-dom'
 
-export function AppFrame(props) {
-  return <Page>{props.children}</Page>
+export function AppFrame() {
+  return (
+    <AppShell padding="md" fixed navbar={<Sidebar width={{ base: 300 }} />}>
+      {/* <AppShell navbar={<AsideBarView width={{ base: 200 }} padding="xs" />}> */}
+
+      <Outlet />
+      {/* </AppShell> */}
+    </AppShell>
+  )
 }

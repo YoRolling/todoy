@@ -1,42 +1,20 @@
-import { useState, Fragment, useEffect } from 'react'
-import styled from 'styled-components'
-import {
-  MenuGroup,
-  Section,
-  CustomItem,
-  HeadingItem,
-  ButtonItem,
-} from '@atlaskit/menu'
-import { useParams, useRouteMatch, useHistory } from 'react-router-dom'
-import ButtonGroup from '@atlaskit/button/button-group'
-import LoadingButton from '@atlaskit/button/loading-button'
-import Button from '@atlaskit/button'
-import TextField from '@atlaskit/textfield'
-import Modal, { ModalTransition } from '@atlaskit/modal-dialog'
-import Form, { ErrorMessage, Field, FormFooter } from '@atlaskit/form'
+import { useState, useEffect } from 'react'
+import { useParams } from 'react-router-dom'
 
-import { CustomLink } from 'components/CustomLink/CustomLink'
 import Icon from 'components/Icon'
 import { CheckListService } from 'db/'
+import { Navbar, Button } from '@mantine/core'
+import { useRouteMatch } from 'react-router-dom'
 
-const MenuListFrame = styled.aside.attrs({ className: 'aside' })`
-  flex: 1 1 20%;
-  padding: 10px 30px;
-  .active {
-    color: #172b4d;
-    background-color: #f4f5f7;
-    -webkit-text-decoration: none;
-    text-decoration: none;
-  }
-`
 const d = new Date()
-export default function AsideBarView() {
-  const match = useRouteMatch({ path: '/task' })
+export default function AsideBarView(props) {
+  const match = useRouteMatch()
+  console.log(match)
+  // const match = useRouteMatch({ path: '/task' })
   const params = useParams()
-  const history = useHistory()
-  const [isOpen, setIsOpen] = useState(false)
-  const close = () => setIsOpen(false)
-  const open = () => setIsOpen(true)
+  // const [isOpen, setIsOpen] = useState(false)
+  // const close = () => setIsOpen(false)
+  // const open = () => setIsOpen(true)
   const [taskOrderList, setTaskOrderList] = useState([])
   async function getAll() {
     try {
@@ -49,10 +27,10 @@ export default function AsideBarView() {
 
   useEffect(() => {
     if (!params.id && taskOrderList.length > 0) {
-      const v = taskOrderList[0]
-      history.push(`${match.url}/${v.id}`)
+      // const v = taskOrderList[0]
+      // history.push(`${match.url}/${v.id}`)
     }
-  }, [params, taskOrderList, match, history])
+  }, [params, taskOrderList])
 
   useEffect(() => {
     getAll()
@@ -60,33 +38,30 @@ export default function AsideBarView() {
 
   return (
     <>
-      <MenuListFrame className="leaft">
-        <MenuGroup>
-          <HeadingItem>
-            <h2>我的一天</h2>
-            <h6>{d.getMonth() + 1 + '-' + d.getDate()} 星期一</h6>
-          </HeadingItem>
-          <Section title="Starred">
-            <ButtonItem iconBefore={<Icon name="add-line" />} onClick={open}>
-              新建清单
-            </ButtonItem>
-          </Section>
-          <Section hasSeparator title="Task">
-            {taskOrderList.map((v) => (
-              <CustomItem
-                href={`${match.url}/${v.id}`}
-                component={CustomLink}
-                iconBefore={<Icon name="task-line" />}
-                key={v.id}
-                active={parseInt(params.id, 10) === v.id}
-              >
-                {v.name}
-              </CustomItem>
-            ))}
-          </Section>
-        </MenuGroup>
-      </MenuListFrame>
-      <ModalTransition>
+      <Navbar {...props}>
+        <Navbar.Section>
+          <h2>我的一天</h2>
+          <h6>{d.getMonth() + 1 + '-' + d.getDate()} 星期一</h6>
+        </Navbar.Section>
+        <Navbar.Section>
+          <Button iconLeft={<Icon name="ri-plus-line" />}>新建清单</Button>
+        </Navbar.Section>
+        <Navbar.Section grow>
+          {/* {taskOrderList.map((v) => (
+            <CustomItem
+              href={`${match.url}/${v.id}`}
+              component={CustomLink}
+              iconBefore={<Icon name="task-line" />}
+              key={v.id}
+              active={parseInt(params.id, 10) === v.id}
+            >
+              {v.name}
+            </CustomItem>
+          ))} */}
+        </Navbar.Section>
+      </Navbar>
+
+      {/* <ModalTransition>
         {isOpen && (
           <Modal heading="新建清单">
             <Form
@@ -139,7 +114,7 @@ export default function AsideBarView() {
             </Form>
           </Modal>
         )}
-      </ModalTransition>
+      </ModalTransition> */}
     </>
   )
 }

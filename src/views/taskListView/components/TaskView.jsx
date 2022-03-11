@@ -1,17 +1,16 @@
 import React, { useState, useEffect } from 'react'
-import { useHistory, useParams, useRouteMatch } from 'react-router-dom'
-import Button from '@atlaskit/button'
+import { useParams } from 'react-router-dom'
+import { Button } from '@mantine/core'
 
 import { TaskService } from 'db'
 import Icon from 'components/Icon'
 export default function TaskView() {
   const { id } = useParams()
   const [taskList, setTaskList] = useState([])
-  const history = useHistory()
-  const match = useRouteMatch()
-  console.log(match)
+  // const match = useRouteMatch()
+  // console.log(match)
   function navigateToEditor() {
-    history.push(`/editor`)
+    // history.push(`/editor`)
   }
   useEffect(() => {
     async function getTaskByCheckId() {
@@ -27,8 +26,8 @@ export default function TaskView() {
     <div>
       <header>
         <Button
-          appearance="primary"
-          iconBefore={<Icon name="add-line" />}
+          variant="outlined"
+          iconLeft={<Icon name="add-line" />}
           onClick={navigateToEditor}
         >
           创建

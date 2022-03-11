@@ -1,9 +1,6 @@
-import styled from 'styled-components'
-import InnerIcon from 'reamix'
-const StyledIcon = styled(InnerIcon)`
-  vertical-align: bottom;
-`
-console.log(StyledIcon)
+const style = {
+  verticalAlign: 'bottom',
+}
 export default function Icon(props) {
-  return <StyledIcon {...props} useStyle={{ verticalAlign: 'bottom' }} />
+  return <i className={props.name} style={style} />
 }
