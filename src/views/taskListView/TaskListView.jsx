@@ -13,7 +13,7 @@ const MainFrame = styled.article`
 
 const ContentFrame = styled.div.attrs({ className: 'content' })`
   flex: 4 4 80%;
-  padding: 10px 30px;
+  padding: 18px;
 `
 export function TaskListView() {
   return (

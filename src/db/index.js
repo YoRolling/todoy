@@ -13,6 +13,10 @@ export const TaskService = {
   async getAllByCid(id) {
     return (await dbPromise).getAllFromIndex(OS_TASK_LIST, 'idx_cid', id)
   },
+  async update(value) {
+    console.log('update', value)
+    return (await dbPromise).put(OS_TASK_LIST, value)
+  },
 }
 export const CheckListService = {
   async get(key) {
@@ -22,6 +26,7 @@ export const CheckListService = {
     return (await dbPromise).add(OS_CHECK_LIST, value)
   },
   async getAll() {
-    return (await dbPromise).getAllFromIndex(OS_CHECK_LIST, 'i_name')
+    return (await dbPromise).getAll(OS_CHECK_LIST)
+    // return (await dbPromise).getAllFromIndex(OS_CHECK_LIST, 'i_name')
   },
 }

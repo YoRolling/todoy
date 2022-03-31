@@ -1,36 +1,66 @@
 import React, { useState, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
-import { Button } from '@mantine/core'
+import { TextInput } from '@mantine/core'
 
 import { TaskService } from 'db'
 import Icon from 'components/Icon'
+import TaskItem from './TaskItem'
 export default function TaskView() {
   const { id } = useParams()
   const [taskList, setTaskList] = useState([])
-  // const match = useRouteMatch()
-  // console.log(match)
-  function navigateToEditor() {
-    // history.push(`/editor`)
-  }
   useEffect(() => {
     TaskService.getAllByCid(id).then((result) => {
       setTaskList(result)
     })
   }, [id])
+
+  const addTask = (e) => {
+    if (e.code === 'Enter') {
+      console.log(e.target.value)
+    }
+    // return CheckListService.add({ name: e.target.value, cid: id })
+    TaskService.add({
+      cid: id,
+      title: e.target.value,
+      description: '',
+      status: 'todo',
+    }).then(() => {})
+  }
+  const onUpdate = (item) => {
+    TaskService.update({
+      ...item,
+      status: item.status === 'done' ? 'todo' : 'done',
+    }).then(() => {
+      TaskService.getAllByCid(id).then((result) => {
+        setTaskList(result)
+      })
+    })
+  }
+
   return (
-    <div>
-      <header>
-        <Button
-          variant="outline"
-          leftIcon={<Icon name="ri-add-line" />}
-          onClick={navigateToEditor}
-        >
-          创建
-        </Button>
-      </header>
-      {taskList.map((v) => {
-        return <div>{v.title}</div>
-      })}
+    <div
+      className="h-100"
+      style={{
+        height: '100% ',
+        display: 'flex',
+        flexDirection: 'column',
+        gap: '20px',
+      }}
+    >
+      <div
+        className="flex justify-between items-center p-4"
+        style={{ flexGrow: 1 }}
+      >
+        {taskList.map((v) => {
+          return <TaskItem item={v} key={v.id} onUpdate={onUpdate} />
+        })}
+      </div>
+      <TextInput
+        placeholder="请输入"
+        size="lg"
+        onKeyDown={addTask}
+        icon={<Icon name="ri-task-line" />}
+      />
     </div>
   )
 }

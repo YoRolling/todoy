@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useCallback, useRef } from 'react'
 
 import Icon from 'components/Icon'
 import { CheckListService } from 'db/'
@@ -8,6 +8,9 @@ import { Navigate, useParams } from 'react-router-dom'
 import { useToggle } from '@mantine/hooks'
 
 const d = new Date()
+// weekdays in Chinese
+const weekdays = ['周日', '周一', '周二', '周三', '周四', '周五', '周六']
+const dateInWeek = weekdays[d.getDay()]
 export default function AsideBarView() {
   const params = useParams({})
   const [open, toggleModal] = useToggle(false, [true, false])
@@ -22,6 +25,8 @@ export default function AsideBarView() {
     getAll()
   }, [getAll])
 
+  const taskNameRef = useRef(null)
+
   if (params && !params.id && taskOrderList.length > 0) {
     return <Navigate to={`${taskOrderList[0].id}`} />
   }
@@ -30,7 +35,9 @@ export default function AsideBarView() {
       <Navbar width={{ base: 300 }} px="md">
         <Navbar.Section>
           <h2>我的一天</h2>
-          <Text>{d.getMonth() + 1 + '-' + d.getDate()} 星期一</Text>
+          <Text>
+            {d.getMonth() + 1 + '-' + d.getDate()} {dateInWeek}
+          </Text>
         </Navbar.Section>
         <Navbar.Section mt="md">
           <Button
@@ -62,6 +69,7 @@ export default function AsideBarView() {
             variant="filled"
             required
             autoComplete="off"
+            ref={taskNameRef}
           />
           <Group direction="row" spacing="md" position="right">
             <Button variant="outline" color="red" onClick={() => toggleModal()}>
@@ -70,12 +78,10 @@ export default function AsideBarView() {
             <Button
               variant="filled"
               leftIcon={<Icon name="ri-add-line" />}
-              onClick={(data) => {
-                console.log('form data', data)
-                return CheckListService.add(data)
+              onClick={() => {
+                return CheckListService.add({ name: taskNameRef.current.value })
                   .then((res) => {
-                    console.log({ res })
-                    // getAll()
+                    getAll()
                     toggleModal()
                   })
                   .catch((error) => error)
